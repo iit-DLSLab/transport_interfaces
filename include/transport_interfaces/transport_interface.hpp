@@ -8,8 +8,8 @@ public:
 
         void init();
 
-        void consumeInputs(Source& source){};
-        void produceOutputs(const Source& source){};
+        void read(Source& source){};
+        void write(const Source& source){};
 
         Transport transport; // Transport layer for high-level communication
 };
