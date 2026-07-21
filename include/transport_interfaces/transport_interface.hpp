@@ -6,7 +6,8 @@ public:
         TransportInterface(){};
         ~TransportInterface(){};
 
-        virtual void init(){};
+        virtual void init(const Source& source){};
+        virtual bool check(){ return true; };
 
         virtual void read(Source& source){};
         virtual void write(const Source& source){};
