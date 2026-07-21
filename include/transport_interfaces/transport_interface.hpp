@@ -6,10 +6,10 @@ public:
         TransportInterface(){};
         ~TransportInterface(){};
 
-        void init();
+        virtual void init(){};
 
-        void read(Source& source){};
-        void write(const Source& source){};
+        virtual void read(Source& source){};
+        virtual void write(const Source& source){};
 
         Transport transport; // Transport layer for high-level communication
 };
