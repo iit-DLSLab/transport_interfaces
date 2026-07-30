@@ -24,4 +24,6 @@ install(DIRECTORY include/
     DESTINATION /usr/include
 )
 
-add_subdirectory(transports/fastdds)
+if(COMPILE_TRANSPORTS)
+    add_subdirectory(transports/fastdds)
+endif()
