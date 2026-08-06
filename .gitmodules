@@ -1,0 +1,3 @@
+[submodule "transports/fastdds/dls2_msgs"]
+	path = transports/fastdds/dls2_msgs
+	url = git@github.com:iit-DLSLab/dls2_msgs.git
