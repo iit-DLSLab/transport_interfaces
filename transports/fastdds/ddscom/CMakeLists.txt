@@ -1,3 +1,5 @@
+include(fetch_duration_utils)
+
 set(FASTDDS_STATISTICS OFF CACHE BOOL "Enable fastdds statistics")
 
 add_library(dls_com STATIC
@@ -12,13 +14,15 @@ target_include_directories(dls_com
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
+fetch_duration_utils()
+
 target_link_libraries(dls_com
 	PUBLIC
 		fastcdr
 		fastdds
 		dls_domains
 		dls_topics
-		dls_utils
+		duration_utils
 		yaml-cpp
 		fastdds_statistics_backend
 )
