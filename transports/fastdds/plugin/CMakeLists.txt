@@ -50,30 +50,3 @@ install(
 	DESTINATION ${PYTHON_MODULE_PATH}/dls2_py/scripts
 	COMPONENT dls_runtime
 )
-
-# -- skeletons
-install(
-	DIRECTORY
-		skeletons/
-	DESTINATION
-		/usr/include/dls2/plugin_skeletons
-)
-# -- create_periodic_plugin
-install(
-	FILES skeletons/periodic/create_periodic_plugin
-	PERMISSIONS
-		WORLD_EXECUTE WORLD_READ
-		OWNER_READ OWNER_WRITE
-	DESTINATION	${DLS_INSTALL_LAUNCH_RUNTIME_DIR}
-	COMPONENT	dls_runtime
-)
-
-# -- create_py_periodic_plugin
-install(
-	FILES skeletons/periodic/create_py_periodic_plugin
-	PERMISSIONS
-		WORLD_EXECUTE WORLD_READ
-		OWNER_READ OWNER_WRITE
-	DESTINATION	${DLS_INSTALL_LAUNCH_RUNTIME_DIR}
-	COMPONENT	dls_runtime
-)
