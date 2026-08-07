@@ -3,6 +3,7 @@ project(transport_interfaces)
 
 set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
+set(CMAKE_INSTALL_PREFIX /usr/lib/dls2 CACHE PATH "Install path" FORCE)
 include(transport_install_target)
 
 include(GNUInstallDirs)
