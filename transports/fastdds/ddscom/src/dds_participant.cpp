@@ -518,7 +518,7 @@ namespace dls
 						info.type_information.type_information.complete().typeid_with_size().type_id(),
 						remote_type_object))
 			{
-				std::cout << "Cannot get the remote type information" << std::endl;
+				// std::cout << "Cannot get the remote type information" << std::endl;
 				return;
 			}
 
@@ -582,7 +582,7 @@ namespace dls
 			servers_path = val;
 		}
 		else{
-			servers_path = "/usr/include/dls2/util/messaging/servers.yaml";
+			servers_path = "/opt/dls2/include/dls2/util/messaging/servers.yaml";
 		}
 		return YAML::LoadFile(servers_path);
 	}
