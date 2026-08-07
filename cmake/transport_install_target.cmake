@@ -9,7 +9,7 @@ function(transport_install_target target_name)
     install(EXPORT ${target_name}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/cmake
         NAMESPACE ${PROJECT_NAME}::
-        FILE ${target_name}Config.cmake
+        FILE ${target_name}Targets.cmake
     )
     install(DIRECTORY include/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
