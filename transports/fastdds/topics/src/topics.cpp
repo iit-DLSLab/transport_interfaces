@@ -60,6 +60,10 @@ namespace dls
     dls::topicType arm_trajectory_generator = dls::topicType("arm_trajectory_generator",
         new dls2_interface::msg::ArmTrajectoryGeneratorPubSubType());
 
+    // battery status
+    dls::topicType battery_status = dls::topicType("battery_status",
+        new dls2_interface::msg::BatteryStatusPubSubType());
+
     namespace high_level_estimation
     {
       dls::topicType legs_pose = dls::topicType("legs_pose",
@@ -78,8 +82,6 @@ namespace dls
 
     namespace low_level_estimation
     {
-      dls::topicType arm_state = dls::topicType("arm_state",
-          new dls2_interface::msg::ArmStatePubSubType());
       dls::topicType blind_state = dls::topicType("blind_state",
           new dls2_interface::msg::BlindStatePubSubType());
       dls::topicType imu = dls::topicType("imu",

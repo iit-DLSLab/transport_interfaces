@@ -6,10 +6,10 @@
 #include <utility>
 #include <typeinfo>
 #include <functional>
-#include <dls_messages/dds/ArmStatePubSubTypes.hpp>
 #include <dls_messages/dds/ArmTrajectoryGeneratorPubSubTypes.hpp>
 #include <dls_messages/dds/AttitudePubSubTypes.hpp>
 #include <dls_messages/dds/BaseStatePubSubTypes.hpp>
+#include <dls_messages/dds/BatteryStatusPubSubTypes.hpp>
 #include <dls_messages/dds/BlindStatePubSubTypes.hpp>
 #include <dls_messages/dds/BoolPubSubTypes.hpp>
 #include <dls_messages/dds/ButtonEventPubSubTypes.hpp>
@@ -76,6 +76,9 @@ namespace dls
 
 		// arm controller
 		extern dls::topicType desired_arm_torques;
+
+		// battery status
+		extern dls::topicType battery_status;
 
 		namespace high_level_estimation
 		{
