@@ -12,7 +12,7 @@ public:
         TransportInterface(){};
         ~TransportInterface(){};
 
-        virtual void init(const Source& source, const YAML::Node& config){};
+        virtual void init(Source& source, const YAML::Node& config){};
         virtual bool check(){ return true; };
 
         virtual void read(Source& source){};
