@@ -79,7 +79,9 @@ namespace dls
 
 		// battery status
 		extern dls::topicType battery_status;
-
+		
+		// hal commands feedback
+		extern dls::topicType hal_commands_feedback;
 		namespace high_level_estimation
 		{
 			extern dls::topicType legs_pose;

@@ -64,6 +64,9 @@ namespace dls
     dls::topicType battery_status = dls::topicType("battery_status",
         new dls2_interface::msg::BatteryStatusPubSubType());
 
+    // hal commands feedback
+    dls::topicType hal_commands_feedback = dls::topicType("hal_commands_feedback",
+        new dls2_interface::msg::ControlSignalPubSubType());
     namespace high_level_estimation
     {
       dls::topicType legs_pose = dls::topicType("legs_pose",
