@@ -78,6 +78,12 @@ namespace dls
 	}
 
 	template <typename MsgType>
+	void Reader<MsgType>::setReceivingDataTimeout(std::chrono::duration<double> timeout)
+	{
+		listener_->setReceivingDataTimeout(timeout);
+	}
+
+	template <typename MsgType>
 	bool Reader<MsgType>::hasStartedReceivingData(){
 		return listener_->started_receiving_data_;
 	}

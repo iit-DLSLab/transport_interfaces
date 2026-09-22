@@ -15,6 +15,8 @@ namespace dls
 		Reader() = delete;
 
 		bool is_receiving_data() const override;
+		// Configure before calling read() or checking input availability.
+		void setReceivingDataTimeout(std::chrono::duration<double> timeout);
 		bool hasStartedReceivingData() override;
 		bool hasHeader() override;
 		bool hasSequenceId() override;

@@ -1,4 +1,6 @@
 #include "dls2/util/messaging/dds_listeners.hpp"
+#include <cmath>
+#include <stdexcept>
 
 
 /// \cond doxygen_namespace_dls
@@ -105,6 +107,14 @@ namespace dls
 				this->callback(this->msg);
 			}
 		}
+	}
+
+	void DDSSubListener::setReceivingDataTimeout(std::chrono::duration<double> timeout)
+	{
+		const double max_seconds = std::chrono::duration<double>(std::chrono::microseconds::max()).count();
+		if (!std::isfinite(timeout.count()) || timeout.count() <= 0.0 || timeout.count() >= max_seconds)
+			throw std::invalid_argument("Receiving timeout must be finite, positive and representable in microseconds");
+		is_receiving_data_th = std::chrono::ceil<std::chrono::microseconds>(timeout);
 	}
 
 	bool DDSSubListener::is_receiving_data() const

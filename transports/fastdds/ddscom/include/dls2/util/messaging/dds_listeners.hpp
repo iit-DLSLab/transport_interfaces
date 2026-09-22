@@ -7,6 +7,7 @@
 #include <fastdds/dds/subscriber/DataReaderListener.hpp>
 
 #include <string>
+#include <chrono>
 #include <mutex>
 #include <shared_mutex>
 #include <vector>
@@ -69,7 +70,10 @@ namespace dls
 		*/
 		bool is_receiving_data() const;
 
-		const std::chrono::microseconds is_receiving_data_th;
+		// Configure before polling the reader; rounds up to microsecond resolution.
+		void setReceivingDataTimeout(std::chrono::duration<double> timeout);
+
+		std::chrono::microseconds is_receiving_data_th;
 		std::chrono::steady_clock::time_point last_timestamp;
 		double last_period_ms;
 	};
