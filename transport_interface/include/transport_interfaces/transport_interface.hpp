@@ -17,6 +17,8 @@ public:
 
         virtual void read(Source& source){};
         virtual void write(const Source& source){};
+        // Publish the events detected in the source's robot interface (e.g. anomalies/safety events).
+        virtual void writeEvents(const Source& source){};
 
         Transport transport; // Transport layer for high-level communication
 };
