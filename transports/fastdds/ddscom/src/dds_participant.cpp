@@ -9,6 +9,10 @@
 
 #include <fastdds/dds/rpc/RequestInfo.hpp>
 
+#include <fastdds/dds/log/Log.hpp>
+#include <mutex>
+#include <regex>
+
 /// \cond doxygen_namespace_dls
 namespace dls
 {
@@ -39,6 +43,14 @@ namespace dls
 		, topicListener(nullptr)
 		, config(DDSParticipant::getServersConfig())
 	{
+		// Install the process-wide log filter before creating any DDS participants.
+		static std::once_flag log_filter_initialized;
+		std::call_once(log_filter_initialized, [] {
+			eprosima::fastdds::dds::Log::SetErrorStringFilter(std::regex(
+				R"(^(?!Locator 'UDPv4:\[127\.0\.0\.1\]:[0-9]+' not found in collection\. Adding entry\.$).*)"
+			));
+		});
+
 		eprosima::fastdds::dds::DomainParticipantQos participantQos;
 		participantQos.wire_protocol().builtin.mutation_tries = 250u; //limit discoverable data readers/writers (default is 100u)
 		participantQos.properties().properties().emplace_back("fastdds.type_propagation","enabled"); // it is enabled by default
