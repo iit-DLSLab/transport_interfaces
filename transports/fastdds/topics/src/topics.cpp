@@ -67,6 +67,10 @@ namespace dls
     // hal commands feedback
     dls::topicType hal_commands_feedback = dls::topicType("hal_commands_feedback",
         new dls2_interface::msg::ControlSignalPubSubType());
+
+    // hal safety debug
+    dls::topicType hal_safety_debug = dls::topicType("hal_safety_debug",
+        new dls2_interface::msg::HalSafetyDebugPubSubType());
     namespace high_level_estimation
     {
       dls::topicType legs_pose = dls::topicType("legs_pose",

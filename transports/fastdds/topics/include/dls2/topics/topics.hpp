@@ -12,6 +12,7 @@
 #include <dls_messages/dds/BatteryStatusPubSubTypes.hpp>
 #include <dls_messages/dds/BlindStatePubSubTypes.hpp>
 #include <dls_messages/dds/BoolPubSubTypes.hpp>
+#include <dls_messages/dds/HalSafetyDebugPubSubTypes.hpp>
 #include <dls_messages/dds/ButtonEventPubSubTypes.hpp>
 #include <dls_messages/dds/CommandCallPubSubTypes.hpp>
 #include <dls_messages/dds/ControllerCommandPubSubTypes.hpp>
@@ -82,6 +83,9 @@ namespace dls
 		
 		// hal commands feedback
 		extern dls::topicType hal_commands_feedback;
+
+		// hal safety debug
+		extern dls::topicType hal_safety_debug;
 		namespace high_level_estimation
 		{
 			extern dls::topicType legs_pose;
