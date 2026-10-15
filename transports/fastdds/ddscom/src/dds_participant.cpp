@@ -55,6 +55,11 @@ namespace dls
 		participantQos.wire_protocol().builtin.mutation_tries = 250u; //limit discoverable data readers/writers (default is 100u)
 		participantQos.properties().properties().emplace_back("fastdds.type_propagation","enabled"); // it is enabled by default
 
+		// UDP-only transport with default configuration (no builtin SHM/UDP transports)
+		auto udp_transport = std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
+		participantQos.transport().user_transports.push_back(udp_transport);
+		participantQos.transport().use_builtin_transports = false;
+
 		// Get server info from the yaml file
 		server_ip = config[dls::domains::id_to_name_map[domain_]]["ip"].as<std::string>();
 		server_port = config[dls::domains::id_to_name_map[domain_]]["port"].as<int>();
