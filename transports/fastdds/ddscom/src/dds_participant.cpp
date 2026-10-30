@@ -6,12 +6,49 @@
 #include <fastdds/dds/xtypes/dynamic_types/DynamicTypeBuilderFactory.hpp>
 
 #include <fastdds/rtps/transport/UDPv4TransportDescriptor.hpp>
+#include <fastdds/rtps/transport/network/AllowedNetworkInterface.hpp>
 
 #include <fastdds/dds/rpc/RequestInfo.hpp>
 
 #include <fastdds/dds/log/Log.hpp>
 #include <mutex>
 #include <regex>
+
+#include <arpa/inet.h>
+#include <ifaddrs.h>
+#include <net/if.h>
+
+namespace
+{
+	// Name of the local non-loopback IPv4 interface whose subnet contains ip, or "" if there is none
+	std::string findInterfaceForAddress(const std::string& ip)
+	{
+		in_addr target{};
+		if (inet_pton(AF_INET, ip.c_str(), &target) != 1)
+			return "";
+
+		ifaddrs* ifaddr = nullptr;
+		if (getifaddrs(&ifaddr) != 0)
+			return "";
+
+		std::string name;
+		for (ifaddrs* ifa = ifaddr; ifa != nullptr; ifa = ifa->ifa_next)
+		{
+			if (!ifa->ifa_addr || !ifa->ifa_netmask || ifa->ifa_addr->sa_family != AF_INET || (ifa->ifa_flags & IFF_LOOPBACK))
+				continue;
+
+			const in_addr_t addr = reinterpret_cast<sockaddr_in*>(ifa->ifa_addr)->sin_addr.s_addr;
+			const in_addr_t mask = reinterpret_cast<sockaddr_in*>(ifa->ifa_netmask)->sin_addr.s_addr;
+			if ((addr & mask) == (target.s_addr & mask))
+			{
+				name = ifa->ifa_name;
+				break;
+			}
+		}
+		freeifaddrs(ifaddr);
+		return name;
+	}
+}
 
 /// \cond doxygen_namespace_dls
 namespace dls
@@ -55,14 +92,39 @@ namespace dls
 		participantQos.wire_protocol().builtin.mutation_tries = 250u; //limit discoverable data readers/writers (default is 100u)
 		participantQos.properties().properties().emplace_back("fastdds.type_propagation","enabled"); // it is enabled by default
 
-		// UDP-only transport with default configuration (no builtin SHM/UDP transports)
-		auto udp_transport = std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
-		participantQos.transport().user_transports.push_back(udp_transport);
-		participantQos.transport().use_builtin_transports = false;
-
 		// Get server info from the yaml file
 		server_ip = config[dls::domains::id_to_name_map[domain_]]["ip"].as<std::string>();
 		server_port = config[dls::domains::id_to_name_map[domain_]]["port"].as<int>();
+
+		// UDP-only transports (no builtin SHM/UDP transports).
+		// With DLS_DDS_SPLIT_TRANSPORT=1 (meant for the robot) and the server reached through a network
+		// interface, the traffic is split so that a slow link (e.g. WiFi) can never block the
+		// communication between participants on this machine:
+		// - loopback: blocking sends, used for all the participants on this machine
+		// - network interface: non-blocking sends, packets are dropped when the link is saturated
+		// The netmask filter makes each transport send only to destinations in its own subnet.
+		// Do not enable it on two machines sharing the same /etc/machine-id (e.g. containers of the
+		// same image): Fast DDS would consider them the same host and use the loopback between them.
+		const char* split_transport_env = getenv("DLS_DDS_SPLIT_TRANSPORT");
+		const bool split_transport = split_transport_env && std::string(split_transport_env) == "1";
+		const std::string net_interface = split_transport ? findInterfaceForAddress(server_ip) : "";
+		if (!net_interface.empty())
+		{
+			auto lo_transport = std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
+			lo_transport->interface_allowlist.emplace_back("lo", eprosima::fastdds::rtps::NetmaskFilterKind::ON);
+			participantQos.transport().user_transports.push_back(lo_transport);
+
+			auto net_transport = std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
+			net_transport->interface_allowlist.emplace_back(net_interface, eprosima::fastdds::rtps::NetmaskFilterKind::ON);
+			net_transport->non_blocking_send = true;
+			participantQos.transport().user_transports.push_back(net_transport);
+		}
+		else
+		{
+			auto udp_transport = std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
+			participantQos.transport().user_transports.push_back(udp_transport);
+		}
+		participantQos.transport().use_builtin_transports = false;
 
 		// Define server locator
 		eprosima::fastdds::rtps::Locator_t server_locator;
