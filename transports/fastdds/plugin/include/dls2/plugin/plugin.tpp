@@ -28,10 +28,10 @@ namespace dls
 	}
 
 	template <typename MsgType>
-	dls::WriterPtr<MsgType> Plugin::buildOutput(const dls::topicType &topic)
+	dls::WriterPtr<MsgType> Plugin::buildOutput(const dls::topicType &topic, eprosima::fastdds::dds::DataWriterQos qos)
 	{
 		OutputInfo output_info{};
-		WriterPtr<MsgType> writer = std::make_shared<dls::Writer<MsgType>>(dds_participant_,topic);
+		WriterPtr<MsgType> writer = std::make_shared<dls::Writer<MsgType>>(dds_participant_,topic,qos);
 		output_info.writer = writer;
 		output_info.topic_name = topic.first;
 		

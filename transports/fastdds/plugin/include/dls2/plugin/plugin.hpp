@@ -65,9 +65,11 @@ namespace dls
 		 * @tparam constructor_args_types types of the constructor arguments of the MsgType class
 		 * @param[in] topic topic to subscribe to
 		 * @param[in] output pointer to the variable storing the last wrote output
+		 * @param[in] qos QoS of the writer, e.g. with "typehash=<hash>;" in USER_DATA for ROS 2 peers
 		 */
 		template <typename MsgType>
-		dls::WriterPtr<MsgType> buildOutput(const dls::topicType &topic);
+		dls::WriterPtr<MsgType> buildOutput(const dls::topicType &topic,
+		                                    eprosima::fastdds::dds::DataWriterQos qos = eprosima::fastdds::dds::DATAWRITER_QOS_DEFAULT);
 
     /*!
       * @brief Read all the inputs.
