@@ -572,13 +572,13 @@ namespace dls
 		}
 		else if (status == eprosima::fastdds::rtps::ParticipantDiscoveryStatus::DROPPED_PARTICIPANT)
 		{
-			std::cout << this->participant->get_qos().name() <<": Participant is dropped: " << info.participant_name << std::endl;
+			// std::cout << this->participant->get_qos().name() <<": Participant is dropped: " << info.participant_name << std::endl;
 			discovered_participants_info.erase(static_cast<std::string>(info.participant_name));
 			participants_by_prefix.erase(guid_prefix_key(info.guid));
 		}
 		else if (status == eprosima::fastdds::rtps::ParticipantDiscoveryStatus::REMOVED_PARTICIPANT)
 		{
-			std::cout << this->participant->get_qos().name() <<": Participant is removed: " << info.participant_name << std::endl;
+			// std::cout << this->participant->get_qos().name() <<": Participant is removed: " << info.participant_name << std::endl;
 			discovered_participants_info.erase(static_cast<std::string>(info.participant_name));
 			participants_by_prefix.erase(guid_prefix_key(info.guid));
 		}
