@@ -150,8 +150,16 @@ namespace dls
 		// participantQos.wire_protocol().builtin.discovery_config.initial_announcements.count = 0;
 		// participantQos.wire_protocol().builtin.discovery_config.initial_announcements.period = Duration_t(0, 100000000u);
 
-		participantQos.wire_protocol().builtin.discovery_config.leaseDuration = eprosima::fastdds::dds::Duration_t(3, 1);
-        participantQos.wire_protocol().builtin.discovery_config.leaseDuration_announcementperiod = eprosima::fastdds::dds::Duration_t(1, 2);
+		// Participant lease: how long a server/peer waits without hearing from this participant before
+		// removing it. DLS_DDS_LEASE_S overrides the default (20.0 s); the announcement period is a third of it.
+		double lease_s = 20.0;
+		if (const char* lease_env = getenv("DLS_DDS_LEASE_S"))
+		{
+			try { lease_s = std::stod(lease_env); } catch (...) {}
+			if (!(lease_s >= 1.0)) lease_s = 20.0;
+		}
+		participantQos.wire_protocol().builtin.discovery_config.leaseDuration = eprosima::fastdds::dds::Duration_t(lease_s);
+		participantQos.wire_protocol().builtin.discovery_config.leaseDuration_announcementperiod = eprosima::fastdds::dds::Duration_t(lease_s / 3.0);
 		participantQos.name(partName_);
 
 		participant_name = partName_;
@@ -564,13 +572,13 @@ namespace dls
 		}
 		else if (status == eprosima::fastdds::rtps::ParticipantDiscoveryStatus::DROPPED_PARTICIPANT)
 		{
-			// std::cout << this->participant->get_qos().name() <<": Participant is dropped: " << info.participant_name << std::endl;
+			std::cout << this->participant->get_qos().name() <<": Participant is dropped: " << info.participant_name << std::endl;
 			discovered_participants_info.erase(static_cast<std::string>(info.participant_name));
 			participants_by_prefix.erase(guid_prefix_key(info.guid));
 		}
 		else if (status == eprosima::fastdds::rtps::ParticipantDiscoveryStatus::REMOVED_PARTICIPANT)
 		{
-			// std::cout << this->participant->get_qos().name() <<": Participant is removed: " << info.participant_name << std::endl;
+			std::cout << this->participant->get_qos().name() <<": Participant is removed: " << info.participant_name << std::endl;
 			discovered_participants_info.erase(static_cast<std::string>(info.participant_name));
 			participants_by_prefix.erase(guid_prefix_key(info.guid));
 		}
